@@ -48,8 +48,10 @@ abstract class GoogleHelper
         'https://apps-apis.google.com/a/feeds/alias/',
         'https://apps-apis.google.com/a/feeds/user/',*/
         'https://www.google.com/m8/feeds/',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/userinfo.email',
         /*'https://www.google.com/m8/feeds/user/',*/
-        ));
+    ));
 
         $client->setClientId($config->clientID);
         $client->setClientSecret($config->clientSecret);
