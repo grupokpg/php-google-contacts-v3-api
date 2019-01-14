@@ -7,6 +7,22 @@ use rapidweb\googlecontacts\objects\Contact;
 
 abstract class ContactFactory
 {
+    
+    public static function getLoggedInUser($customConfig = NULL)
+    {
+        {
+            $client = GoogleHelper::getClient($customConfig);
+
+            $req = new \Google_Http_Request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json');
+
+            $val = $client->getAuth()->authenticatedRequest($req);
+
+            $response = $val->getResponseBody();
+            return json_decode($response);
+        }
+    }
+
+
     public static function getAll($customConfig = NULL)
     {
         $client = GoogleHelper::getClient($customConfig);
@@ -47,25 +63,25 @@ abstract class ContactFactory
             foreach ($contactGDNodes as $key => $value) {
                 switch ($key) {
                     case 'organization':
-                        $contactDetails[$key]['orgName'] = (string) $value->orgName;
-                        $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
-                        break;
+                    $contactDetails[$key]['orgName'] = (string) $value->orgName;
+                    $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
+                    break;
                     case 'email':
-                        $attributes = $value->attributes();
-                        $emailadress = (string) $attributes['address'];
-                        $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                        $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
-                        break;
+                    $attributes = $value->attributes();
+                    $emailadress = (string) $attributes['address'];
+                    $emailtype = substr(strstr($attributes['rel'], '#'), 1);
+                    $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
+                    break;
                     case 'phoneNumber':
-                        $attributes = $value->attributes();
+                    $attributes = $value->attributes();
                         //$uri = (string) $attributes['uri'];
-                        $type = substr(strstr($attributes['rel'], '#'), 1);
+                    $type = substr(strstr($attributes['rel'], '#'), 1);
                         //$e164 = substr(strstr($uri, ':'), 1);
-                        $contactDetails[$key][] = ['type' => $type, 'number' => $value->__toString()];
-                        break;
+                    $contactDetails[$key][] = ['type' => $type, 'number' => $value->__toString()];
+                    break;
                     default:
-                        $contactDetails[$key] = (string) $value;
-                        break;
+                    $contactDetails[$key] = (string) $value;
+                    break;
                 }
             }
 
@@ -114,25 +130,25 @@ abstract class ContactFactory
         foreach ($contactGDNodes as $key => $value) {
             switch ($key) {
                 case 'organization':
-                    $contactDetails[$key]['orgName'] = (string) $value->orgName;
-                    $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
-                    break;
+                $contactDetails[$key]['orgName'] = (string) $value->orgName;
+                $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
+                break;
                 case 'email':
-                    $attributes = $value->attributes();
-                    $emailadress = (string) $attributes['address'];
-                    $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                    $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
-                    break;
+                $attributes = $value->attributes();
+                $emailadress = (string) $attributes['address'];
+                $emailtype = substr(strstr($attributes['rel'], '#'), 1);
+                $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
+                break;
                 case 'phoneNumber':
-                    $attributes = $value->attributes();
-                    $uri = (string) $attributes['uri'];
-                    $type = substr(strstr($attributes['rel'], '#'), 1);
-                    $e164 = substr(strstr($uri, ':'), 1);
-                    $contactDetails[$key][] = ['type' => $type, 'number' => $e164];
-                    break;
+                $attributes = $value->attributes();
+                $uri = (string) $attributes['uri'];
+                $type = substr(strstr($attributes['rel'], '#'), 1);
+                $e164 = substr(strstr($uri, ':'), 1);
+                $contactDetails[$key][] = ['type' => $type, 'number' => $e164];
+                break;
                 default:
-                    $contactDetails[$key] = (string) $value;
-                    break;
+                $contactDetails[$key] = (string) $value;
+                break;
             }
         }
 
